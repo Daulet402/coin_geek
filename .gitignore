@@ -5,5 +5,5 @@ gradle
 gradle.bat
 gradlew.bat
 gradlew
-log
+log/
 src/main/resources/secret-info.properties

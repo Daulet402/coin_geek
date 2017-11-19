@@ -1,7 +1,7 @@
-package techSolutions.parser;
+package techSolutions.api;
 
 import java.io.IOException;
 
-public interface IParser {
+public interface Parser {
     void parse() throws IOException;
 }

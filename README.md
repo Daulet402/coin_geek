@@ -1,4 +1,3 @@
-# jsoup_parser
-Sample project to parse website with jsoup
-Parsed https://losst.ru/
-Also some code to parse vk.com/groups/$group_id
+# coin geek bot for telegram
+Sample project to parse 
+https://coingecko.com with jsoup to get rates of cryptocurrencies

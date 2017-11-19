@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import techSolutions.api.CacheService;
 import techSolutions.api.CoinService;
+import techSolutions.api.CoingeckoParser;
 import techSolutions.dto.CoinType;
 import techSolutions.dto.exceptions.CoinException;
-import techSolutions.parser.ICoingeckoParser;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class CoinServiceImpl implements CoinService {
     private CacheService cacheService;
 
     @Autowired
-    private ICoingeckoParser coingeckoParser;
+    private CoingeckoParser coingeckoParser;
 
 
     @Override

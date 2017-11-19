@@ -10,8 +10,6 @@ repositories {
 dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
-    compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.26'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
     compile group: 'org.telegram', name: 'telegrambots', version: '3.3'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '1.5.7.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.7.RELEASE'
@@ -28,8 +26,4 @@ task fatJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
-}
-
-repositories {
-    mavenCentral()
 }

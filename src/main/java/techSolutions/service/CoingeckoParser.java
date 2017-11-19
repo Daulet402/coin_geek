@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import techSolutions.dto.CoinType;
-import techSolutions.parser.ICoingeckoParser;
 import techSolutions.utils.CoinConstants;
 import techSolutions.utils.Constants;
 
@@ -17,7 +16,7 @@ import java.util.Objects;
 
 @Data
 @Component
-public class CoingeckoParser implements ICoingeckoParser {
+public class CoingeckoParser implements techSolutions.api.CoingeckoParser {
 
     private CoinType coinType;
     private String coinRate;

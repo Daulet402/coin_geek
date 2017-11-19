@@ -1,4 +1,4 @@
-package techSolutions.config;
+package techSolutions.app.config;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InjectionPoint;

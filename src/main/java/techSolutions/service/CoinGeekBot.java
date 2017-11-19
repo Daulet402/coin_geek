@@ -27,6 +27,9 @@ public class CoinGeekBot extends TelegramLongPollingBot {
     @Value("${bot.token:''}")
     private String botToken;
 
+    @Autowired
+    private BotConstants botConstants;
+
     @Override
     public String getBotToken() {
         return botToken;
@@ -62,7 +65,7 @@ public class CoinGeekBot extends TelegramLongPollingBot {
                     message = String.valueOf(coinService.getCache());
                     break;
                 default:
-                    message = BotConstants.UNKNOWN_COMMAND_MESSAGE;
+                    message = botConstants.getBotUnknownCommand();
             }
             log.info(String.format("Request: %s From: %s, Response message: %s",
                     update.getMessage().getText(),
@@ -71,7 +74,7 @@ public class CoinGeekBot extends TelegramLongPollingBot {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        this.sendMessage(update, StringUtils.isNotEmpty(message) ? message : BotConstants.ERROR_MESSAGE);
+        this.sendMessage(update, StringUtils.isNotEmpty(message) ? message : botConstants.getErrorMessage());
     }
 
     public void sendMessage(Update update, String message) {

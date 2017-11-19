@@ -1,70 +1,84 @@
-package techSolutions.bot;
+package techSolutions.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import techSolutions.api.CoinService;
 import techSolutions.dto.CoinType;
-import techSolutions.parser.ICoingeckoParser;
+import techSolutions.dto.exceptions.CoinException;
 import techSolutions.utils.BotConstants;
-import techSolutions.utils.CoinConstants;
-
-import java.io.IOException;
-import java.util.Objects;
 
 @Component("coinGeekBot")
+@PropertySource("classpath:secret-info.properties")
 public class CoinGeekBot extends TelegramLongPollingBot {
-
-    @Autowired
-    private ICoingeckoParser parser;
 
     @Autowired
     private Logger log;
 
+    @Autowired
+    private CoinService coinService;
+
+    @Value("${bot.token:''}")
+    private String botToken;
+
     @Override
     public String getBotToken() {
-        return BotConstants.COIN_GEEK_BOT_TOKEN;
+        return botToken;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        String message = null;
         try {
-            String message;
             switch (update.getMessage().getText()) {
                 case BotConstants.BITCOIN_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.BITCOIN);
+                    message = getCoinRateInternal(CoinType.BITCOIN);
                     break;
                 case BotConstants.ETHEREUM_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.ETHEREUM);
+                    message = getCoinRateInternal(CoinType.ETHEREUM);
                     break;
                 case BotConstants.BITCOIN_CASH_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.BITCOIN_CASH);
+                    message = getCoinRateInternal(CoinType.BITCOIN_CASH);
                     break;
                 case BotConstants.LITECOIN_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.LITECOIN);
+                    message = getCoinRateInternal(CoinType.LITECOIN);
                     break;
                 case BotConstants.ZCASH_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.ZCASH);
+                    message = getCoinRateInternal(CoinType.ZCASH);
                     break;
                 case BotConstants.DASH_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.DASH);
+                    message = getCoinRateInternal(CoinType.DASH);
                     break;
                 case BotConstants.MONERO_RATE_COMMAND:
-                    message = getCoinRateInternal(parser, CoinType.MONERO);
+                    message = getCoinRateInternal(CoinType.MONERO);
+                    break;
+                case BotConstants.CACHE_COMMAND:
+                    message = String.valueOf(coinService.getCache());
                     break;
                 default:
                     message = BotConstants.UNKNOWN_COMMAND_MESSAGE;
             }
-            update.getMessage().getChatId();
-            SendMessage messageToSend = new SendMessage();
-            messageToSend.setChatId(update.getMessage().getChatId());
             log.info(String.format("Request: %s From: %s, Response message: %s",
                     update.getMessage().getText(),
                     update.getMessage().getFrom(),
                     message));
-            messageToSend.setText(Objects.nonNull(message) ? message : BotConstants.ERROR_MESSAGE);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        this.sendMessage(update, StringUtils.isNotEmpty(message) ? message : BotConstants.ERROR_MESSAGE);
+    }
+
+    public void sendMessage(Update update, String message) {
+        try {
+            SendMessage messageToSend = new SendMessage();
+            messageToSend.setChatId(update.getMessage().getChatId());
+            messageToSend.setText(message);
             this.sendMessage(messageToSend);
             log.info("Message sent successfully");
         } catch (Exception e) {
@@ -72,8 +86,8 @@ public class CoinGeekBot extends TelegramLongPollingBot {
         }
     }
 
-    private String getCoinRateInternal(ICoingeckoParser parser, CoinType coinType) throws IOException {
-        return parser.getCoinRateByCoinType(coinType);
+    private String getCoinRateInternal(CoinType coinType) throws CoinException {
+        return coinService.getCoinRateByCoinType(coinType);
     }
 
     @Override

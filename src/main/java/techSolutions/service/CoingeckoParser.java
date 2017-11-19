@@ -1,4 +1,4 @@
-package techSolutions.parser;
+package techSolutions.service;
 
 import lombok.Data;
 import org.apache.log4j.Logger;
@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import techSolutions.dto.CoinType;
+import techSolutions.parser.ICoingeckoParser;
 import techSolutions.utils.CoinConstants;
 import techSolutions.utils.Constants;
 
@@ -34,6 +35,7 @@ public class CoingeckoParser implements ICoingeckoParser {
     @Override
     public void parse() throws IOException {
         String url = CoinConstants.COIN_PAGE_URL.concat(getCoinUri(coinType));
+        log.info("url is " + url);
         Document document = Jsoup.connect(url).get();
         Elements elements = document.getElementsByAttributeValue(Constants.CLASS_ATTR_NAME, CoinConstants.COIN_VALUE_CLASS_NAME);
         if (Objects.nonNull(elements)) {

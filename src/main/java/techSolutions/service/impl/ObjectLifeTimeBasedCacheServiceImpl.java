@@ -44,8 +44,7 @@ public class ObjectLifeTimeBasedCacheServiceImpl extends TimeBasedCacheServiceIm
 
     @Override
     public void addToCache(String key, Object value) {
-        CacheDTO cacheDTO = new CacheDTO(value, LocalDateTime.now());
-        cache.put(key, cacheDTO);
+        cache.put(key, new CacheDTO(value, LocalDateTime.now()));
     }
 
     @Override
